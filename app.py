@@ -5,13 +5,14 @@ from unidecode import unidecode
 from azure.storage.blob import BlobServiceClient
 import ahpy
 from unittest.mock import patch
+import os
 
 # -----------------------------------------------------------
 # CONFIGURAÇÕES 
 # -----------------------------------------------------------
 
-CONNECTION_STRING = "COLE_AQUI_SUA_CONNECTION_STRING"
-CONTAINER_NAME = "nome-do-container"
+AZURE_CONNECTION_STRING = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
+CONTAINER_NAME = "excel"
 INPUT_FILE = "preferencias_final.xlsx"      # Excel original no Blob
 OUTPUT_FILE = "ranking_gerado.xlsx"      # Excel gerado pelo código
 
@@ -108,25 +109,25 @@ def calculo_prioridade_global(variaveis, pesos_criterio, alternativas):
 # INÍCIO DO PROCESSAMENTO
 # -----------------------------------------------------------
 
-print("📥 Baixando arquivo do Azure Blob...")
+print("Baixando arquivo do Azure Blob...")
 
-blob_service = BlobServiceClient.from_connection_string(CONNECTION_STRING)
+blob_service = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
 container = blob_service.get_container_client(CONTAINER_NAME)
 blob_client = container.get_blob_client(INPUT_FILE)
 
 with open("entrada.xlsx", "wb") as f:
     f.write(blob_client.download_blob().readall())
 
-print("✔️ Download concluído.")
+print("Download concluído.")
 
 # -----------------------------------------------------------
 # EXECUÇÃO CÓDIGO AHP
 # -----------------------------------------------------------
 
-print("🔎 Executando AHP...")
+print("Executando AHP...")
 
 ### EXCEL DE CRITÉRIOS
-crit = pd.read_excel("entrada.xlsx", sheet_name="criterios")
+crit = pd.read_excel("preferencias_final.xlsx", sheet_name="criterios")
 crit = crit.drop(crit.columns[0], axis=1)
 
 julg_crit = tuple(crit.values[np.triu_indices_from(crit.values, k=1)])
@@ -136,7 +137,7 @@ with patch('ahpy.ahpy.Compare._build_matrix', patched__build_matrix):
     CRITERIA = ahpy.Compare("Criteria", dic_crit, precision=10, random_index='dd')
 
 ### EXCEL DOS DADOS DAS CIDADES
-df = pd.read_excel("entrada.xlsx", sheet_name="dados2022_geral")
+df = pd.read_excel("preferencias_final.xlsx", sheet_name="dados2022_geral")
 df_original = df.copy()
 
 df["Município"] = df["Município"].apply(lambda x: unidecode(x))
@@ -165,18 +166,18 @@ norm = normalize_dict(ranking_final)
 df_rank = pd.DataFrame.from_dict(norm, orient="index", columns=["Valor"])
 df_rank.to_excel("ranking.xlsx")
 
-print("🏆 Ranking gerado com sucesso!")
+print("Ranking gerado com sucesso!")
 
 # -----------------------------------------------------------
 # UPLOAD PARA O BLOB
 # -----------------------------------------------------------
 
-print("📤 Enviando ranking para o Azure Blob...")
+print("Enviando ranking para o Azure Blob...")
 
 blob_out = container.get_blob_client(OUTPUT_FILE)
 
 with open("ranking.xlsx", "rb") as f:
     blob_out.upload_blob(f, overwrite=True)
 
-print("✔️ Upload concluído!")
-print("🚀 Processamento finalizado com sucesso.")
+print("Upload concluído!")
+print("Processamento finalizado com sucesso.")
