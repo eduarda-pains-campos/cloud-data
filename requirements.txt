@@ -1,3 +1,4 @@
+flask
 pandas
 numpy
 openpyxl
@@ -5,4 +6,5 @@ ahpy
 unidecode
 azure-storage-blob
 python-dotenv
+
 
