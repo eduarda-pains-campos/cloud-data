@@ -17,9 +17,9 @@ jobs:
         uses: azure/docker-login@v1
         with:
           login-server: projetocloud.azurecr.io
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
-
+          username: projetocloud
+          password: DUjwYK5F9CNqPm6H7jYc0QuUHDR6hPprG8YKTcM5xs+ACRAyTmZD
+          
       - name: Build and push Docker image
         run: |
           docker build -t projetocloud.azurecr.io/ranking-app:latest .
