@@ -16,9 +16,9 @@ jobs:
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v1
         with:
-          login-server: projetocloud.azurecr.io
-          username: projetocloud
-          password: DUjwYK5F9CNqPm6H7jYc0QuUHDR6hPprG8YKTcM5xs+ACRAyTmZD
+          login-server: ${{ secrets.AZURE_CONTAINER_REGISTRY }}   # projetocloud.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}                   # projetocloud
+          password: ${{ secrets.ACR_PASSWORD }}
           
       - name: Build and push Docker image
         run: |
