@@ -253,18 +253,6 @@ else:
         # tentar baixar do blob (caso o arquivo exista no Blob mas não localmente)
         df_rank = baixar_ranking_blob_para_df()
 
-# Se não temos ranking ainda
-if df_rank is None or df_rank.shape[0] == 0:
-    st.warning("Nenhum ranking encontrado localmente. Rode o processamento ou verifique o Blob/arquivo.")
-else:
-    # Preparar dados
-    df_rank = df_rank.copy()
-    # garantir tipos
-    df_rank["Valor"] = pd.to_numeric(df_rank["Valor"], errors="coerce").fillna(0)
-    # ordenar
-    ascending = (sort_order == "Ascendente (menor primeiro)")
-    df_rank = df_rank.sort_values("Valor", ascending=ascending).reset_index(drop=True)
-
 # ------------------ Classificação ------------------
 df_rank["Categoria"] = df_rank["Valor"].apply(
     lambda v: "Bom" if v >= 0.67 else ("Médio" if v >= 0.337 else "Ruim")
