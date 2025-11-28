@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# Inicia o Flask em background (porta 8080)
-python app.py &
+# Ativar modo "strict" (opcional, mas recomendado)
+set -e
 
-# Inicia o Streamlit como aplicação principal (porta 8501)
-streamlit run app_streamlit.py --server.address 0.0.0.0 --server.port 8501
+echo "Inicializando aplicação Streamlit..."
+
+# Executa o app
+streamlit run app.py --server.port=8501 --server.address=0.0.0.0
+
