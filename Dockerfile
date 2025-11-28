@@ -18,3 +18,4 @@ EXPOSE 8080
 
 # Comando de inicialização
 CMD ["python", "app.py"]
+
