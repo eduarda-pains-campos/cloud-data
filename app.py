@@ -269,17 +269,6 @@ else:
     ascending = (sort_order == "Ascendente (menor primeiro)")
     df_rank = df_rank.sort_values("Valor", ascending=ascending).reset_index(drop=True)
 
-   # Classificação
-def classificar(valor):
-    if valor >= 0.67:
-        return "Bom"
-    elif valor >= 0.337:
-        return "Médio"
-    else:
-        return "Ruim"
-
-df_rank["Categoria"] = df_rank["Valor"].apply(classificar)
-
 # ------------------ Classificação ------------------
 df_rank["Categoria"] = df_rank["Valor"].apply(
     lambda v: "Bom" if v >= 0.67 else ("Médio" if v >= 0.337 else "Ruim")
