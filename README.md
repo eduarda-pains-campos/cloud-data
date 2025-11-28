@@ -3,7 +3,7 @@ Repositório para o projeto final Sistemas de Dados em Nuvem desenvolvido na dis
 
 Equipe
 Eduarda Pains Campos — 23882004 — eduarda.pc1@puccampinas.edu.br
-Nome do aluno 2 — Matrícula — E-mail
+Tayana Araujo de Assis — 23880883 — tayana.aa@puccampinas.edu.br
 
 Descrição Geral
 Painel de análise de dados de perdas hídricas na região das Bacias PCJ.
