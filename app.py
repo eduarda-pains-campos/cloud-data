@@ -224,7 +224,6 @@ st.set_page_config(page_title="Ranking AHP • Bacias PCJ", layout="wide")
 st.title("Ranking das Bacias PCJ — Perdas Hídricas")
 st.markdown(
     "Ranking geral dos municípios das bacias PCJ em relação às perdas hídricas.\n\n"
-    "Você pode **executar o processamento** (ler o arquivo do Blob, gerar o ranking e subir o resultado) ou **carregar** o ranking já gerado para visualizar gráficos."
 )
 
 # Área lateral: controles
@@ -232,9 +231,6 @@ with st.sidebar:
     st.header("Ações")
     run_button = st.button("Executar processamento (gerar ranking)")
     refresh_button = st.button("Recarregar ranking")
-    st.markdown("---")
-    top_n = st.slider("Mostrar top N municípios", min_value=5, max_value=50, value=15, step=1)
-    sort_order = st.selectbox("Ordenação", options=["Descendente (maior primeiro)", "Ascendente (menor primeiro)"])
     st.markdown("---")
     st.write("Download")
     download_csv_btn = st.checkbox("Mostrar botão de download após carregar")
