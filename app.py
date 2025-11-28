@@ -297,7 +297,7 @@ with col1:
     with st.expander("Ver municípios por categoria"):
         for cat in ["Bom", "Médio", "Ruim"]:
             st.markdown(f"**{cat}**")
-            st.table(df_rank[df_rank["Categori]()_]()_
+            st.table(df_rank[df_rank["Categoria"]()_]()_
 
 # -------------------------------------------
 # MOSTRAR TABELA COMPLETA (opcional)
