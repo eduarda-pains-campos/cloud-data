@@ -32,7 +32,7 @@ A aplicação foi implementada em **Streamlit**, containerizada com **Docker** e
   Arquivo Excel contendo indicadores municipais das Bacias PCJ.
 
 - **Licenciamento:**  
-  Dados públicos provenientes de entidades governamentais.  
+  Dados públicos.
 
 ---
 
