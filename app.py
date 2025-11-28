@@ -223,7 +223,7 @@ st.set_page_config(page_title="Ranking AHP • Bacias PCJ", layout="wide")
 
 st.title("Ranking das Bacias PCJ — Perdas Hídricas")
 st.markdown(
-    "Este dashboard exibe o ranking dos municípios das bacias PCJ em relação às perdas hídricas.\n\n"
+    "Ranking geral dos municípios das bacias PCJ em relação às perdas hídricas.\n\n"
     "Você pode **executar o processamento** (ler o arquivo do Blob, gerar o ranking e subir o resultado) ou **carregar** o ranking já gerado para visualizar gráficos."
 )
 
@@ -280,45 +280,35 @@ def classificar(valor):
 
 df_rank["Categoria"] = df_rank["Valor"].apply(classificar)
 
-# Visual: duas colunas reformuladas
+# ------------------ Classificação ------------------
+df_rank["Categoria"] = df_rank["Valor"].apply(
+    lambda v: "Bom" if v >= 0.67 else ("Médio" if v >= 0.337 else "Ruim")
+)
+
+# ------------------ Layout principal ------------------
 col1, col2 = st.columns([2, 1])
 
-# -------------------------------------------
-# COLUNA 1 — NOVO GRÁFICO PRINCIPAL
-# -------------------------------------------
+# ------------------ COLUNA 1: gráfico + categorias ------------------
 with col1:
     st.subheader("Distribuição dos Municípios por Categoria")
-
-    # Melhor visual: gráfico de barras agrupando as categorias
+    
+    # Gráfico de barras
     chart_df = df_rank.groupby("Categoria")["Município"].count().reset_index()
     chart_df = chart_df.rename(columns={"Município": "Quantidade"})
-
     st.bar_chart(chart_df.set_index("Categoria"))
 
     st.markdown("""
-    **Categorias:**
-    - 🟢 **Bom:** 0.67 a 1  
-    - 🟡 **Médio:** 0.337 a 0.66  
-    - 🔴 **Ruim:** 0 a 0.336  
+    **Categorias:**  
+    - 🟢 Bom: 0.67 a 1  
+    - 🟡 Médio: 0.337 a 0.66  
+    - 🔴 Ruim: 0 a 0.336
     """)
 
-# -------------------------------------------
-# COLUNA 2 — NOVAS ESTATÍSTICAS
-# -------------------------------------------
-with col2:
-    st.subheader("Resumo")
-
-    st.metric("Total de Municípios", len(df_rank))
-
-    # Top 5 melhores
-    st.markdown("### 🟢 Top 5 Melhores")
-    top5_best = df_rank.sort_values("Valor", ascending=False).head(5)
-    st.table(top5_best[["Município", "Valor"]].reset_index(drop=True))
-
-    # Top 5 piores
-    st.markdown("### 🔴 Top 5 Piores")
-    top5_worst = df_rank.sort_values("Valor", ascending=True).head(5)
-    st.table(top5_worst[["Município", "Valor"]].reset_index(drop=True))
+    # Expander para tabela completa por categoria
+    with st.expander("Ver municípios por categoria"):
+        for cat in ["Bom", "Médio", "Ruim"]:
+            st.markdown(f"**{cat}**")
+            st.table(df_rank[df_rank["Categori]()_]()_
 
 # -------------------------------------------
 # MOSTRAR TABELA COMPLETA (opcional)
@@ -328,4 +318,4 @@ if show_raw:
     st.dataframe(df_rank)
 
 st.markdown("---")
-st.caption("Feito com Streamlit")
+st.caption("Material criado como parte do projeto final da disciplina Computação em Nuvem 2025")
