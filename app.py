@@ -1,4 +1,4 @@
-from flask import Flask
+import streamlit as st
 import pandas as pd
 import numpy as np
 import itertools
@@ -7,8 +7,6 @@ from azure.storage.blob import BlobServiceClient
 import ahpy
 from unittest.mock import patch
 import os
-
-app = Flask(__name__)
 
 # -----------------------------------------------------------
 # CONFIGURAÇÕES 
@@ -20,7 +18,7 @@ INPUT_FILE = "preferencias_final.xlsx"
 OUTPUT_FILE = "ranking_gerado.xlsx"
 
 # -----------------------------------------------------------
-# SUAS FUNÇÕES (não alterei nada)
+# SUAS FUNÇÕES (mantidas exatamente como no original)
 # -----------------------------------------------------------
 
 def tratamento_zeros1(df):
@@ -108,7 +106,7 @@ def calculo_prioridade_global(variaveis, pesos_criterio, alternativas):
     return ranking
 
 # -----------------------------------------------------------
-# FUNÇÃO PRINCIPAL (roda quando acessar /run)
+# FUNÇÃO PRINCIPAL DE PROCESSAMENTO
 # -----------------------------------------------------------
 
 def executar_processamento():
@@ -163,24 +161,16 @@ def executar_processamento():
         blob_out.upload_blob(f, overwrite=True)
 
 # -----------------------------------------------------------
-# ROTAS FLASK
+# INTERFACE STREAMLIT
 # -----------------------------------------------------------
 
-@app.route("/")
-def health():
-    return "Running", 200
+st.title("Ranking AHP • Dashboard Streamlit")
+st.write("Clique abaixo para gerar o ranking a partir dos arquivos do Azure Blob Storage.")
 
-@app.route("/run")
-def run():
-    try:
-        executar_processamento()
-        return "Processamento concluído com sucesso!", 200
-    except Exception as e:
-        return f"Erro: {str(e)}", 500
-
-# -----------------------------------------------------------
-# INICIAR SERVIDOR
-# -----------------------------------------------------------
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+if st.button("Executar processamento"):
+    with st.spinner("Processando, aguarde..."):
+        try:
+            executar_processamento()
+            st.success("Processamento concluído com sucesso!")
+        except Exception as e:
+            st.error(f"Erro durante o processamento: {e}")
