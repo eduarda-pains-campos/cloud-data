@@ -297,14 +297,45 @@ with col1:
     with st.expander("Ver municípios por categoria"):
         for cat in ["Bom", "Médio", "Ruim"]:
             st.markdown(f"**{cat}**")
-            st.table(df_rank[df_rank["Categoria"]()_]()_
+            st.table(df_rank[df_rank["Categoria"] == cat][["Município", "Valor"]].reset_index(drop=True))
 
-# -------------------------------------------
-# MOSTRAR TABELA COMPLETA (opcional)
-# -------------------------------------------
+# ------------------ COLUNA 2: resumo e top 5 ------------------
+with col2:
+    st.subheader("Resumo")
+    st.metric("Total de Municípios", len(df_rank))
+
+    # Top 5 melhores e piores lado a lado
+    top_col1, top_col2 = st.columns(2)
+
+    with top_col1:
+        st.markdown("### 🟢 Top 5 Melhores")
+        top5_best = df_rank.sort_values("Valor", ascending=False).head(5)
+        st.table(top5_best[["Município", "Valor"]].reset_index(drop=True))
+
+    with top_col2:
+        st.markdown("### 🔴 Top 5 Piores")
+        top5_worst = df_rank.sort_values("Valor", ascending=True).head(5)
+        st.table(top5_worst[["Município", "Valor"]].reset_index(drop=True))
+
+# ------------------ Tabela completa opcional ------------------
 if show_raw:
     st.subheader("Tabela completa")
     st.dataframe(df_rank)
 
+# ------------------ Download CSV/XLSX ------------------
+if download_csv_btn and df_rank.shape[0] > 0:
+    csv = df_rank.to_csv(index=False).encode("utf-8")
+    st.download_button("Baixar ranking (CSV)", data=csv, file_name="ranking.csv", mime="text/csv")
+    
+    towrite = BytesIO()
+    df_rank.to_excel(towrite, index=False, engine="openpyxl")
+    towrite.seek(0)
+    st.download_button(
+        "Baixar ranking (XLSX)", 
+        data=towrite, 
+        file_name="ranking.xlsx", 
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    
 st.markdown("---")
 st.caption("Material criado como parte do projeto final da disciplina Computação em Nuvem 2025")
