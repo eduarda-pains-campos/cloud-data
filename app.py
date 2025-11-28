@@ -269,43 +269,63 @@ else:
     ascending = (sort_order == "Ascendente (menor primeiro)")
     df_rank = df_rank.sort_values("Valor", ascending=ascending).reset_index(drop=True)
 
-    # Visual: duas colunas
-    col1, col2 = st.columns([2, 1])
+   # Classificação
+def classificar(valor):
+    if valor >= 0.67:
+        return "Bom"
+    elif valor >= 0.337:
+        return "Médio"
+    else:
+        return "Ruim"
 
-    with col1:
-        st.subheader("Gráfico — Ranking por Município")
-        # mostrar top N
-        top_df = df_rank.head(top_n).copy() if not ascending else df_rank.tail(top_n).copy()
-        # para visual horizontal (município no eixo y), vamos inverter a ordem para visual agradável
-        top_df_plot = top_df.copy()
-        top_df_plot = top_df_plot.set_index("Município")
-        # exibir bar chart (streamlit usa altair internamente)
-        st.bar_chart(top_df_plot["Valor"])
+df_rank["Categoria"] = df_rank["Valor"].apply(classificar)
 
-        st.markdown("**Observações:**\n- Valores normalizados entre 0 e 1 (conforme implementação).")
-        # permitir download
-        if download_csv_btn:
-            csv = df_rank.to_csv(index=False).encode("utf-8")
-            st.download_button("Baixar ranking (CSV)", data=csv, file_name="ranking.csv", mime="text/csv")
-            # excel
-            towrite = BytesIO()
-            df_rank.to_excel(towrite, index=False, engine="openpyxl")
-            towrite.seek(0)
-            st.download_button("Baixar ranking (XLSX)", data=towrite, file_name="ranking.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+# Visual: duas colunas reformuladas
+col1, col2 = st.columns([2, 1])
 
-    with col2:
-        st.subheader("Resumo e Estatísticas")
-        st.metric("Municípios", len(df_rank))
-        st.metric("Máximo (valor)", f"{df_rank['Valor'].max():.4f}")
-        st.metric("Mínimo (valor)", f"{df_rank['Valor'].min():.4f}")
-        st.markdown("### Top 5")
-        top5 = df_rank.head(5)
-        st.table(top5.reset_index(drop=True))
+# -------------------------------------------
+# COLUNA 1 — NOVO GRÁFICO PRINCIPAL
+# -------------------------------------------
+with col1:
+    st.subheader("Distribuição dos Municípios por Categoria")
 
-    # tabela completa
-    if show_raw:
-        st.subheader("Tabela completa")
-        st.dataframe(df_rank)
+    # Melhor visual: gráfico de barras agrupando as categorias
+    chart_df = df_rank.groupby("Categoria")["Município"].count().reset_index()
+    chart_df = chart_df.rename(columns={"Município": "Quantidade"})
+
+    st.bar_chart(chart_df.set_index("Categoria"))
+
+    st.markdown("""
+    **Categorias:**
+    - 🟢 **Bom:** 0.67 a 1  
+    - 🟡 **Médio:** 0.337 a 0.66  
+    - 🔴 **Ruim:** 0 a 0.336  
+    """)
+
+# -------------------------------------------
+# COLUNA 2 — NOVAS ESTATÍSTICAS
+# -------------------------------------------
+with col2:
+    st.subheader("Resumo")
+
+    st.metric("Total de Municípios", len(df_rank))
+
+    # Top 5 melhores
+    st.markdown("### 🟢 Top 5 Melhores")
+    top5_best = df_rank.sort_values("Valor", ascending=False).head(5)
+    st.table(top5_best[["Município", "Valor"]].reset_index(drop=True))
+
+    # Top 5 piores
+    st.markdown("### 🔴 Top 5 Piores")
+    top5_worst = df_rank.sort_values("Valor", ascending=True).head(5)
+    st.table(top5_worst[["Município", "Valor"]].reset_index(drop=True))
+
+# -------------------------------------------
+# MOSTRAR TABELA COMPLETA (opcional)
+# -------------------------------------------
+if show_raw:
+    st.subheader("Tabela completa")
+    st.dataframe(df_rank)
 
 st.markdown("---")
-st.caption("Feito com Streamlit — se precisar de outros gráficos (mapa, séries temporais ou comparações entre bacias), eu adapto o dashboard.")
+st.caption("Feito com Streamlit")
