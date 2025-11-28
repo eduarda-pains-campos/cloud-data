@@ -1,25 +1,28 @@
-FROM python:3.10-slim
+# Imagem base
+FROM python:3.11-slim
 
-# Diretório de trabalho
+# Evita prompts interativos
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Define diretório da aplicação
 WORKDIR /app
 
-# Copia requirements
+# Copia requirements primeiro (melhor para cache)
 COPY requirements.txt .
 
-# Instala dependências
+# Instala dependências do Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia todo o projeto
+# Copia o restante da aplicação
 COPY . .
 
-# Torna o script de inicialização executável
+# Dá permissão de execução ao script de inicialização
 RUN chmod +x startup.sh
 
-# Expõe as portas do Flask e do Streamlit
-EXPOSE 8080
+# Expõe a porta padrão do Streamlit
 EXPOSE 8501
 
-# Usa o script de inicialização
+# Comando padrão ao iniciar o container
 CMD ["./startup.sh"]
 
 
