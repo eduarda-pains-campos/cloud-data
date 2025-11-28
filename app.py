@@ -91,7 +91,7 @@ def julgamentos_coluna(df, coluna, precision, municipios, referencia):
 def normalize_dict(d):
     minv = min(d.values())
     maxv = max(d.values())
-    return {k: (v - minv) / (maxv - minv) for k in d.items()}
+    return {k: (v - minv) / (maxv - minv) for k, v in d.items()}
 
 def ordena_prioridades_alternativas(lista):
     prioridades = []
