@@ -12,10 +12,15 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copia todo o projeto
 COPY . .
 
-# Expõe a porta obrigatória do Azure
-EXPOSE 8080
+# Torna o script de inicialização executável
+RUN chmod +x startup.sh
 
-# Comando de inicialização do Streamlit
-CMD ["streamlit", "run", "app.py", "--server.port=8080", "--server.address=0.0.0.0"]
+# Expõe as portas do Flask e do Streamlit
+EXPOSE 8080
+EXPOSE 8501
+
+# Usa o script de inicialização
+CMD ["./startup.sh"]
+
 
 
