@@ -229,13 +229,13 @@ st.markdown(
 # Área lateral: controles
 with st.sidebar:
     st.header("Ações")
-    run_button = st.button("Executar processamento (gerar ranking)")
+    run_button = st.button("Gerar Ranking")
     refresh_button = st.button("Recarregar ranking")
     st.markdown("---")
     st.write("Download")
-    download_csv_btn = st.checkbox("Mostrar botão de download após carregar")
+    download_csv_btn = st.checkbox("Habilitar Download")
     st.markdown("---")
-    st.write("Debug")
+    st.write("Exibir tabela")
     show_raw = st.checkbox("Mostrar tabela completa")
 
 # Execução do processamento
