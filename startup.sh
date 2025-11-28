@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Ativar modo "strict" (opcional, mas recomendado)
+# Ativar modo "strict" 
 set -e
 
 echo "Inicializando aplicação Streamlit..."
