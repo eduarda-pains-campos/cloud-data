@@ -41,8 +41,7 @@ A aplicação foi implementada em **Streamlit**, containerizada com **Docker** e
 ```mermaid
 flowchart TD
 A[GitHub Repository] --> B[GitHub Actions - CI/CD Pipeline]
-B --> C[Docker Build]
-C --> D[Azure Container Registry]
-D --> E[Azure Container Apps - Deploy]
-E --> F[Dashboard em Streamlit]
-F --> G[Usuário]
+B --> C[Azure Container Registry]
+C --> D[Azure Container Apps - Deploy]
+D --> E[Dashboard em Streamlit]
+E --> F[Usuário]
