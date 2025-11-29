@@ -13,9 +13,8 @@ Repositório para o projeto final da disciplina de **Computação em Nuvem**.
 Este projeto consiste no desenvolvimento de um **painel de análise de dados de perdas hídricas** na região das **Bacias PCJ (Piracicaba, Capivari e Jundiaí)**.
 
 O sistema tem como objetivo:
-
-- Facilitar a visualização dos indicadores municipais de perdas hídricas;  
-- Gerar rankings comparativos entre os municípios;  
+  
+- Gerar ranking comparativo entre os municípios;  
 - Permitir uma exploração visual interativa (dashboard);  
 - Apoiar decisões em gestão hídrica e saneamento.  
 
